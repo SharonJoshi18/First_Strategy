@@ -1,0 +1,18 @@
+# Python virtual environment
+venv311/
+venv/
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+nse_data
