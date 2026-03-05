@@ -15,4 +15,5 @@ logs/
 .DS_Store
 Thumbs.db
 
-nse_data
+./nse_data
+nse_data/
