@@ -29,3 +29,4 @@ feedToken = smartApi.getfeedToken()
 fetcher = AngelDataFetcher(feedToken)
 
 fetcher.fetch_nifty_options()
+fetcher.ETFList()
