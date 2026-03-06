@@ -51,6 +51,7 @@
 
 import os
 import pyotp
+import re
 from logzero import logger
 from dotenv import load_dotenv
 from SmartApi import SmartConnect
@@ -68,22 +69,29 @@ TOTP_STR = os.getenv("TOKEN")
 smartApi = SmartConnect(api_key=HIST_KEY)
 
 try:
-    totp = pyotp.TOTP(TOTP_STR).now()
+    # Sanitizing TOTP_STR to prevent Base32 errors
+    clean_token = re.sub(r'[^a-zA-Z2-7]', '', TOTP_STR).upper()
+    totp = pyotp.TOTP(clean_token).now()
+    
     session_data = smartApi.generateSession(USER_ID, PASSWORD, totp)
     
+    if not session_data.get('status'):
+        raise Exception(session_data.get('message'))
+
     authToken = session_data['data']['jwtToken']
     feedToken = smartApi.getfeedToken()
     
-    print("✔ Login Successful!")
+    print(f"✔ Login Successful: {USER_ID}")
 except Exception as e:
     logger.error(f"Login Failed: {e}")
-    exit()
+    os._exit(1)
 
-print("--- Step 1: Fetching Scrip Master Data ---")
+print("Fetching initial data...")
 fetcher = AngelDataFetcher(feedToken)
 fetcher.ETFList()  
+print("Initial data fetch complete. Starting live tick data...")
 
-print("--- Step 2: Starting Live Tick Stream ---")
+
 streamer = AngelOneStreamer(
     api_key=MRKT_KEY,
     auth_token=authToken,
