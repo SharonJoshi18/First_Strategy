@@ -6,11 +6,11 @@ import os
 
 load_dotenv()
 
-api_key = os.getenv("API_KEY")
+API_KEY_HISTORICAL_DATA = os.getenv("API_KEY_HISTORICAL_DATA")
 username = os.getenv("ANGEL_USERNAME")
 pwd = os.getenv("PWD")
 
-smartApi = SmartConnect(api_key)
+smartApi = SmartConnect(API_KEY_HISTORICAL_DATA)
 
 try:
     token = os.getenv("TOKEN")
